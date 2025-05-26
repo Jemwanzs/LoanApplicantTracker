@@ -1,0 +1,51 @@
+📌 Steps to Update Your Local Project to GitHub
+1️⃣ Open PowerShell and go to your project directory:
+bash
+Copy
+Edit
+cd "C:\Users\James Bright\DeVops\LoanApplicantJMS"
+2️⃣ Initialize Git (if not already initialized)
+bash
+Copy
+Edit
+git init
+3️⃣ Add your GitHub remote (or check if it’s already set)
+If you haven’t set it:
+
+bash
+Copy
+Edit
+git remote add origin https://github.com/Jemwanzs/LoanApplicantTracker.git
+If it's already set but you want to be sure:
+
+bash
+Copy
+Edit
+git remote -v
+You should see:
+
+perl
+Copy
+Edit
+origin  https://github.com/Jemwanzs/LoanApplicantTracker.git (fetch)
+origin  https://github.com/Jemwanzs/LoanApplicantTracker.git (push)
+4️⃣ Rename your local branch to main
+bash
+Copy
+Edit
+git branch -M main
+5️⃣ Add your project files to staging
+bash
+Copy
+Edit
+git add .
+6️⃣ Commit your changes
+bash
+Copy
+Edit
+git commit -m "Update project files and initial push to GitHub"
+7️⃣ Push your files to the main branch on GitHub
+bash
+Copy
+Edit
+git push -u origin main
