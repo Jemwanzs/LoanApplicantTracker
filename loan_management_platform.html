@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Applicant Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #FF6B35;
+            --primary-dark: #E55A2B;
+            --primary-light: #FFE8E0;
+            --text-dark: #2D3748;
+            --text-light: #718096;
+            --bg-light: #F7FAFC;
+            --white: #FFFFFF;
+            --gray-100: #F7FAFC;
+            --gray-200: #EDF2F7;
+            --gray-300: #E2E8F0;
+            --success: #38A169;
+            --warning: #D69E2E;
+            --error: #E53E3E;
+            --info: #3182CE;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #FFFFFF 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            background: var(--white);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--gray-300);
+            border-radius: 8px;
+            background: var(--white);
+            cursor: pointer;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 2rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .table th {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .table tr:hover {
+            background: var(--primary-light);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        /* Auth Pages */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        }
+
+        .auth-card {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-dark);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        .status-approved {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .status-declined {
+            background: var(--error);
+            color: var(--white);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .format-currency {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">{Loan~A}Pro</a>
+                <nav class="nav-menu" id="navMenu">
+                    <a href="#" class="nav-link active" onclick="showDashboard()">Dashboard</a>
+                    <a href="#" class="nav-link" onclick="showApplications()">Applications</a>
+                    <a href="#" class="nav-link" onclick="showSettings()">Settings</a>
+                    <a href="#" class="nav-link" onclick="logout()">Logout</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-title">Login</h1>
+            <form onsubmit="login(event)">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">Login</button>
+                <div style="text-align: center;">
+                    <a href="#" onclick="showSignup()" style="color: var(--primary-color);">Don't have an account? Sign up</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Page -->
+    <div id="signupPage" class="auth-container hidden">
+        <div class="auth-card">
+            <h1 class="auth-title">Sign Up</h1>
+            <form onsubmit="signup(event)">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="signupPassword" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-input" id="confirmPassword" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Theme Color</label>
+                    <input type="color" class="form-input" id="themeColor" value="#FF6B35">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">Sign Up</button>
+                <div style="text-align: center;">
+                    <a href="#" onclick="showLogin()" style="color: var(--primary-color);">Already have an account? Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="hidden">
+        <!-- Dashboard -->
+        <div id="dashboardPage" class="container" style="padding: 2rem 20px;">
+            <h1 style="margin-bottom: 2rem; font-size: 2.5rem; font-weight: 700;">Dashboard</h1>
+            
+            <!-- Stats Grid -->
+            <div class="dashboard-grid" id="statsGrid">
+                <div class="card stat-card">
+                    <div class="stat-number" id="totalApplications">0</div>
+                    <div class="stat-label">Total Applications</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-number" id="pendingApplications">0</div>
+                    <div class="stat-label">Pending Applications</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-number" id="approvedApplications">0</div>
+                    <div class="stat-label">Approved Applications</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-number" id="declinedApplications">0</div>
+                    <div class="stat-label">Declined Applications</div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Applications by Status</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Applications by Loan Type</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="loanTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Applications Page -->
+        <div id="applicationsPage" class="container hidden" style="padding: 2rem 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h1 style="font-size: 2.5rem; font-weight: 700;">Applications</h1>
+                <button class="btn btn-primary" onclick="exportToExcel()">Export to Excel</button>
+            </div>
+            
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Applicant Name</th>
+                            <th>Mobile</th>
+                            <th>Loan Amount</th>
+                            <th>Tenure</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="applicationsTableBody">
+                        <!-- Applications will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settingsPage" class="container hidden" style="padding: 2rem 20px;">
+            <h1 style="margin-bottom: 2rem; font-size: 2.5rem; font-weight: 700;">Settings</h1>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Loan Types</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label">Add New Loan Type</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" class="form-input" id="newLoanType" placeholder="e.g., Personal Loan">
+                                <button class="btn btn-primary" onclick="addLoanType()">Add</button>
+                            </div>
+                        </div>
+                        <div id="loanTypesList">
+                            <!-- Loan types will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Theme Settings</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label">Primary Color</label>
+                            <input type="color" class="form-input" id="settingsThemeColor" onchange="updateThemeColor()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tenure Limits</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div>
+                                    <label class="form-label" style="font-size: 0.875rem;">Min (months)</label>
+                                    <input type="number" class="form-input" id="minTenure" value="1">
+                                </div>
+                                <div>
+                                    <label class="form-label" style="font-size: 0.875rem;">Max (months)</label>
+                                    <input type="number" class="form-input" id="maxTenure" value="60">
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Public Application Form -->
+    <div id="publicForm" class="hidden">
+        <div class="container" style="padding: 2rem 20px; max-width: 800px;">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="card-title" style="font-size: 2rem;">Loan Application Form</h1>
+                    <p style="opacity: 0.9;">Fill out the form below to apply for a loan</p>
+                </div>
+                <div class="card-body">
+                    <form onsubmit="submitApplication(event)">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Full Name *</label>
+                                <input type="text" class="form-input" id="applicantName" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Mobile Number *</label>
+                                <input type="tel" class="form-input" id="applicantMobile" required>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Email Address *</label>
+                                <input type="email" class="form-input" id="applicantEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Job Title *</label>
+                                <input type="text" class="form-input" id="applicantJob" required>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Loan Amount (KES) *</label>
+                                <input type="number" class="form-input" id="loanAmount" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Tenure (months) *</label>
+                                <input type="number" class="form-input" id="loanTenure" min="1" max="60" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Employment Duration (years) *</label>
+                                <input type="number" class="form-input" id="employmentDuration" step="0.1" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Upload Payslips (Max 3 files) *</label>
+                            <input type="file" class="form-input" id="payslips" multiple accept=".pdf,.jpg,.jpeg,.png" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Application</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Detail Modal -->
+    <div id="applicationModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Application Details</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="applicationDetails">
+                <!-- Details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let applications = [];
+        let loanTypes = ['Personal Loan', 'Car Loan', 'Emergency Loan', 'Business Loan'];
+
+        // Utility Functions
+        function formatCurrency(amount) {
+            return 'KES ' + Number(amount).toLocaleString();
+        }
+
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        // Initialize app
+        function initApp() {
+            // Check if user is logged in
+            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            const apps = JSON.parse(localStorage.getItem('applications') || '[]');
+            const storedLoanTypes = JSON.parse(localStorage.getItem('loanTypes') || 'null');
+            
+            if (storedLoanTypes) {
+                loanTypes = storedLoanTypes;
+            }
+            
+            applications = apps;
+
+            if (user) {
+                currentUser = user;
+                showMainApp();
+                loadUserTheme();
+            } else {
+                showLogin();
+            }
+        }
+
+        // Authentication functions
+        function showLogin() {
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('publicForm').classList.add('hidden');
+        }
+
+        function showSignup() {
+            document.getElementById('signupPage').classList.remove('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+        }
+
+        function showMainApp() {
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('publicForm').classList.add('hidden');
+            showDashboard();
+        }
+
+        function login(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                showMainApp();
+                loadUserTheme();
+            } else {
+                alert('Invalid credentials!');
+            }
+        }
+
+        function signup(event) {
+            event.preventDefault();
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const themeColor = document.getElementById('themeColor').value;
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            if (users.find(u => u.email === email)) {
+                alert('User already exists!');
+                return;
+            }
+
+            const newUser = {
+                id: generateId(),
+                email,
+                password,
+                themeColor,
+                createdAt: new Date().toISOString()
+            };
+
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            currentUser = newUser;
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            showMainApp();
+            loadUserTheme();
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            showLogin();
+        }
+
+        // Theme functions
+        function loadUserTheme() {
+            if (currentUser && currentUser.themeColor) {
+                updateThemeColor(currentUser.themeColor);
+                document.getElementById('settingsThemeColor').value = currentUser.themeColor;
+            }
+        }
+
+        function updateThemeColor(color = null) {
+            const themeColor = color || document.getElementById('settingsThemeColor').value;
+            document.documentElement.style.setProperty('--primary-color', themeColor);
+            
+            // Save to user preferences
+            if (currentUser) {
+                currentUser.themeColor = themeColor;
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                if (userIndex !== -1) {
+                    users[userIndex] = currentUser;
+                    localStorage.setItem('users', JSON.stringify(users));
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                }
+            }
+        }
+
+        // Navigation functions
+        function showDashboard() {
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelector('.nav-link[onclick="showDashboard()"]').classList.add('active');
+            
+            document.getElementById('dashboardPage').classList.remove('hidden');
+            document.getElementById('applicationsPage').classList.add('hidden');
+            document.getElementById('settingsPage').classList.add('hidden');
+            
+            updateDashboardStats();
+            updateCharts();
+        }
+
+        function showApplications() {
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelector('.nav-link[onclick="showApplications()"]').classList.add('active');
+            
+            document.getElementById('applicationsPage').classList.remove('hidden');
+            document.getElementById('dashboardPage').classList.add('hidden');
+            document.getElementById('settingsPage').classList.add('hidden');
+            
+            loadApplicationsTable();
+        }
+
+        function showSettings() {
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelector('.nav-link[onclick="showSettings()"]').classList.add('active');
+            
+            document.getElementById('settingsPage').classList.remove('hidden');
+            document.getElementById('dashboardPage').classList.add('hidden');
+            document.getElementById('applicationsPage').classList.add('hidden');
+            
+            loadSettings();
+        }
+
+        // Dashboard functions
+        function updateDashboardStats() {
+            const total = applications.length;
+            const pending = applications.filter(app => app.status === 'pending').length;
+            const approved = applications.filter(app => app.status === 'approved').length;
+            const declined = applications.filter(app => app.status === 'declined').length;
+
+            document.getElementById('totalApplications').textContent = total;
+            document.getElementById('pendingApplications').textContent = pending;
+            document.getElementById('approvedApplications').textContent = approved;
+            document.getElementById('declinedApplications').textContent = declined;
+        }
+
+        function updateCharts() {
+            // Status Chart
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            const pending = applications.filter(app => app.status === 'pending').length;
+            const approved = applications.filter(app => app.status === 'approved').length;
+            const declined = applications.filter(app => app.status === 'declined').length;
+
+            new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending', 'Approved', 'Declined'],
+                    datasets: [{
+                        data: [pending, approved, declined],
+                        backgroundColor: ['#D69E2E', '#38A169', '#E53E3E'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Loan Type Chart
+            const loanTypeCtx = document.getElementById('loanTypeChart').getContext('2d');
+            const loanTypeData = {};
+            
+            applications.forEach(app => {
+                const type = app.loanType || 'Personal Loan';
+                loanTypeData[type] = (loanTypeData[type] || 0) + 1;
+            });
+
+            new Chart(loanTypeCtx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(loanTypeData),
+                    datasets: [{
+                        label: 'Applications',
+                        data: Object.values(loanTypeData),
+                        backgroundColor: '#FF6B35',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Applications functions
+        function loadApplicationsTable() {
+            const tbody = document.getElementById('applicationsTableBody');
+            tbody.innerHTML = '';
+
+            applications.forEach(app => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${app.fullName}</td>
+                    <td>${app.mobile}</td>
+                    <td class="format-currency">${formatCurrency(app.loanAmount)}</td>
+                    <td>${app.tenure} months</td>
+                    <td><span class="status-badge status-${app.status}">${app.status}</span></td>
+                    <td>
+                        <button class="btn btn-secondary" style="padding: 0.5rem 1rem; margin-right: 0.5rem;" onclick="viewApplication('${app.id}')">View</button>
+                        <button class="btn btn-outline" style="padding: 0.5rem 1rem;" onclick="processApplication('${app.id}')">Process</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function viewApplication(applicationId) {
+            const app = applications.find(a => a.id === applicationId);
+            if (!app) return;
+
+            const modal = document.getElementById('applicationModal');
+            const details = document.getElementById('applicationDetails');
+
+            details.innerHTML = `
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--primary-color);">Personal Information</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div><strong>Full Name:</strong> ${app.fullName}</div>
+                        <div><strong>Mobile:</strong> ${app.mobile}</div>
+                        <div><strong>Email:</strong> ${app.email}</div>
+                        <div><strong>Job Title:</strong> ${app.jobTitle}</div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--primary-color);">Loan Details</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div><strong>Amount:</strong> <span class="format-currency">${formatCurrency(app.loanAmount)}</span></div>
+                        <div><strong>Tenure:</strong> ${app.tenure} months</div>
+                        <div><strong>Employment Duration:</strong> ${app.employmentDuration} years</div>
+                        <div><strong>Status:</strong> <span class="status-badge status-${app.status}">${app.status}</span></div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--primary-color);">Application Date</h3>
+                    <p>${new Date(app.submittedAt).toLocaleDateString()} at ${new Date(app.submittedAt).toLocaleTimeString()}</p>
+                </div>
+
+                ${app.notes ? `
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem; color: var(--primary-color);">Processing Notes</h3>
+                        <p style="background: var(--gray-100); padding: 1rem; border-radius: 8px;">${app.notes}</p>
+                    </div>
+                ` : ''}
+
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="downloadApplicationPDF('${app.id}')">Download PDF</button>
+                    <button class="btn btn-secondary" onclick="shareWhatsApp('${app.id}')">Share WhatsApp</button>
+                    ${app.status === 'pending' ? `<button class="btn btn-outline" onclick="processApplication('${app.id}')">Process Application</button>` : ''}
+                </div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        function processApplication(applicationId) {
+            const app = applications.find(a => a.id === applicationId);
+            if (!app) return;
+
+            const action = prompt('Enter action (approve/decline):');
+            if (!action || !['approve', 'decline'].includes(action.toLowerCase())) {
+                alert('Invalid action. Please enter "approve" or "decline".');
+                return;
+            }
+
+            const notes = prompt('Add processing notes (optional):') || '';
+
+            app.status = action.toLowerCase() === 'approve' ? 'approved' : 'declined';
+            app.processedAt = new Date().toISOString();
+            app.notes = notes;
+
+            // Save to localStorage
+            localStorage.setItem('applications', JSON.stringify(applications));
+
+            // Refresh views
+            if (!document.getElementById('applicationsPage').classList.contains('hidden')) {
+                loadApplicationsTable();
+            }
+            if (!document.getElementById('dashboardPage').classList.contains('hidden')) {
+                updateDashboardStats();
+                updateCharts();
+            }
+
+            closeModal();
+            alert(`Application ${app.status} successfully!`);
+        }
+
+        function downloadApplicationPDF(applicationId) {
+            const app = applications.find(a => a.id === applicationId);
+            if (!app) return;
+
+            // Create a temporary div with the application details
+            const tempDiv = document.createElement('div');
+            tempDiv.style.padding = '2rem';
+            tempDiv.style.backgroundColor = 'white';
+            tempDiv.style.fontFamily = 'Arial, sans-serif';
+            tempDiv.innerHTML = `
+                <div style="text-align: center; margin-bottom: 2rem; border-bottom: 2px solid #FF6B35; padding-bottom: 1rem;">
+                    <h1 style="color: #FF6B35; margin: 0;">Loan Application</h1>
+                    <p style="margin: 0.5rem 0 0 0; color: #666;">Application ID: ${app.id}</p>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="color: #FF6B35; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">Personal Information</h2>
+                    <table style="width: 100%; margin-top: 1rem;">
+                        <tr><td style="padding: 0.5rem 0; font-weight: bold;">Full Name:</td><td style="padding: 0.5rem 0;">${app.fullName}</td></tr>
+                        <tr><td style="padding: 0.5rem 0; font-weight: bold;">Mobile:</td><td style="padding: 0.5rem 0;">${app.mobile}</td></tr>
+                        <tr><td style="padding: 0.5rem 0; font-weight: bold;">Email:</td><td style="padding: 0.5rem 0;">${app.email}</td></tr>
+                        <tr><td style="padding: 0.5rem 0; font-weight: bold;">Job Title:</td><td style="padding: 0.5rem 0;">${app.jobTitle}</td></tr>
+                        <tr><td style="padding: 0.5rem 0; font-weight: bold;">Employment Duration:</td><td style="padding: 0.5rem 0;">${app.employmentDuration} years</td></tr>
+                    </table>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="color: #FF6B35; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">Loan Details</h2>
+                    <table style="width: 100%; margin-top: 1rem;">
+                        <tr><td style="padding: 0.5rem 0; font-weight: bold;">Loan Amount:</td><td style="padding: 0.5rem 0; color: #FF6B35; font-weight: bold;">${formatCurrency(app.loanAmount)}</td></tr>
+                        <tr><td style="padding: 0.5rem 0; font-weight: bold;">Tenure:</td><td style="padding: 0.5rem 0;">${app.tenure} months</td></tr>
+                        <tr><td style="padding: 0.5rem 0; font-weight: bold;">Status:</td><td style="padding: 0.5rem 0; text-transform: uppercase; font-weight: bold;">${app.status}</td></tr>
+                        <tr><td style="padding: 0.5rem 0; font-weight: bold;">Submitted:</td><td style="padding: 0.5rem 0;">${new Date(app.submittedAt).toLocaleDateString()}</td></tr>
+                    </table>
+                </div>
+
+                ${app.notes ? `
+                    <div style="margin-bottom: 2rem;">
+                        <h2 style="color: #FF6B35; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">Processing Notes</h2>
+                        <p style="background: #f5f5f5; padding: 1rem; border-radius: 8px; margin-top: 1rem;">${app.notes}</p>
+                    </div>
+                ` : ''}
+            `;
+
+            document.body.appendChild(tempDiv);
+
+            html2canvas(tempDiv).then(canvas => {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF();
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210;
+                const pageHeight = 295;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+
+                let position = 0;
+
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                pdf.save(`loan-application-${app.id}.pdf`);
+                document.body.removeChild(tempDiv);
+            });
+        }
+
+        function shareWhatsApp(applicationId) {
+            const app = applications.find(a => a.id === applicationId);
+            if (!app) return;
+
+            const message = `*Loan Application Details*\n\n` +
+                `*Applicant:* ${app.fullName}\n` +
+                `*Mobile:* ${app.mobile}\n` +
+                `*Email:* ${app.email}\n` +
+                `*Job:* ${app.jobTitle}\n` +
+                `*Amount:* ${formatCurrency(app.loanAmount)}\n` +
+                `*Tenure:* ${app.tenure} months\n` +
+                `*Status:* ${app.status.toUpperCase()}\n` +
+                `*Submitted:* ${new Date(app.submittedAt).toLocaleDateString()}\n\n` +
+                `Application ID: ${app.id}`;
+
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function exportToExcel() {
+            const worksheet = XLSX.utils.json_to_sheet(applications.map(app => ({
+                'Application ID': app.id,
+                'Full Name': app.fullName,
+                'Mobile': app.mobile,
+                'Email': app.email,
+                'Job Title': app.jobTitle,
+                'Employment Duration': app.employmentDuration + ' years',
+                'Loan Amount': app.loanAmount,
+                'Tenure': app.tenure + ' months',
+                'Status': app.status,
+                'Submitted Date': new Date(app.submittedAt).toLocaleDateString(),
+                'Notes': app.notes || ''
+            })));
+
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Applications');
+            XLSX.writeFile(workbook, 'loan-applications.xlsx');
+        }
+
+        // Settings functions
+        function loadSettings() {
+            // Load loan types
+            const loanTypesList = document.getElementById('loanTypesList');
+            loanTypesList.innerHTML = '';
+
+            loanTypes.forEach((type, index) => {
+                const div = document.createElement('div');
+                div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background: var(--gray-100); border-radius: 8px; margin-bottom: 0.5rem;';
+                div.innerHTML = `
+                    <span>${type}</span>
+                    <button class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;" onclick="removeLoanType(${index})">Remove</button>
+                `;
+                loanTypesList.appendChild(div);
+            });
+
+            // Load tenure limits
+            const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+            document.getElementById('minTenure').value = settings.minTenure || 1;
+            document.getElementById('maxTenure').value = settings.maxTenure || 60;
+        }
+
+        function addLoanType() {
+            const input = document.getElementById('newLoanType');
+            const type = input.value.trim();
+
+            if (!type) {
+                alert('Please enter a loan type');
+                return;
+            }
+
+            if (loanTypes.includes(type)) {
+                alert('Loan type already exists');
+                return;
+            }
+
+            loanTypes.push(type);
+            localStorage.setItem('loanTypes', JSON.stringify(loanTypes));
+            input.value = '';
+            loadSettings();
+        }
+
+        function removeLoanType(index) {
+            if (confirm('Are you sure you want to remove this loan type?')) {
+                loanTypes.splice(index, 1);
+                localStorage.setItem('loanTypes', JSON.stringify(loanTypes));
+                loadSettings();
+            }
+        }
+
+        function saveSettings() {
+            const settings = {
+                minTenure: parseInt(document.getElementById('minTenure').value),
+                maxTenure: parseInt(document.getElementById('maxTenure').value)
+            };
+
+            localStorage.setItem('settings', JSON.stringify(settings));
+            alert('Settings saved successfully!');
+        }
+
+        // Public form functions
+        function showPublicForm() {
+            document.getElementById('publicForm').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+        }
+
+        function submitApplication(event) {
+            event.preventDefault();
+
+            const application = {
+                id: generateId(),
+                fullName: document.getElementById('applicantName').value,
+                mobile: document.getElementById('applicantMobile').value,
+                email: document.getElementById('applicantEmail').value,
+                jobTitle: document.getElementById('applicantJob').value,
+                loanAmount: parseInt(document.getElementById('loanAmount').value),
+                tenure: parseInt(document.getElementById('loanTenure').value),
+                employmentDuration: parseFloat(document.getElementById('employmentDuration').value),
+                payslips: [], // File handling would need backend
+                status: 'pending',
+                submittedAt: new Date().toISOString(),
+                loanType: 'Personal Loan' // Default type
+            };
+
+            applications.push(application);
+            localStorage.setItem('applications', JSON.stringify(applications));
+
+            alert('Application submitted successfully! You will be contacted soon.');
+            
+            // Reset form
+            event.target.reset();
+        }
+
+        // Modal functions
+        function closeModal() {
+            document.getElementById('applicationModal').classList.remove('active');
+        }
+
+        // Initialize the app when page loads
+        document.addEventListener('DOMContentLoaded', initApp);
+
+        // Add public form access
+        function goToPublicForm() {
+            showPublicForm();
+        }
+
+        // Add click outside modal to close
+        document.getElementById('applicationModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+
+    <!-- Public Form Access Button (for testing) -->
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+        <button class="btn btn-primary" onclick="goToPublicForm()" style="border-radius: 50px; padding: 1rem 1.5rem;">
+            📝 Apply for Loan
+        </button>
+    </div>
+</body>
+</html>
