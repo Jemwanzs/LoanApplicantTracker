@@ -1,0 +1,481 @@
+/* Mobile Responsive CSS for Loan Applicant Platform */
+
+/* Mobile-First Media Queries */
+
+/* Extra Small Devices (phones, 480px and down) */
+@media screen and (max-width: 480px) {
+    /* Typography Adjustments */
+    body {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    /* Header Responsive */
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0.75rem 0;
+    }
+
+    .logo {
+        font-size: 1.25rem;
+        text-align: center;
+    }
+
+    .nav-menu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        width: 100%;
+    }
+
+    .nav-link {
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        background: var(--gray-100);
+        transition: all 0.3s ease;
+    }
+
+    .nav-link.active {
+        background: var(--primary-color);
+        color: var(--white);
+    }
+
+    /* Container Adjustments */
+    .container {
+        padding: 0 10px;
+    }
+
+    /* Page Titles */
+    h1 {
+        font-size: 1.75rem !important;
+        margin-bottom: 1rem !important;
+        text-align: center;
+    }
+
+    /* Auth Pages Mobile */
+    .auth-container {
+        padding: 1rem;
+    }
+
+    .auth-card {
+        padding: 1.5rem;
+        margin: 1rem 0;
+        border-radius: 12px;
+    }
+
+    .auth-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Dashboard Grid Mobile */
+    .dashboard-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .stat-number {
+        font-size: 1.75rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+    }
+
+    /* Charts Container Mobile */
+    .dashboard-grid + div {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        margin-bottom: 2rem !important;
+    }
+
+    /* Card Adjustments */
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    .card-header {
+        padding: 1rem;
+    }
+
+    .card-title {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    /* Form Adjustments */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .form-input,
+    .form-select {
+        padding: 0.625rem;
+        font-size: 0.875rem;
+        border-radius: 6px;
+    }
+
+    /* Button Adjustments */
+    .btn {
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+    /* Table Mobile - Convert to Cards */
+    .table-container {
+        margin-top: 1rem;
+    }
+
+    .table {
+        display: none; /* Hide table on mobile */
+    }
+
+    /* Create mobile card layout for applications */
+    #applicationsTableBody {
+        display: block;
+    }
+
+    #applicationsTableBody tr {
+        display: block;
+        background: var(--white);
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: none;
+    }
+
+    #applicationsTableBody td {
+        display: block;
+        padding: 0.25rem 0;
+        border: none;
+        text-align: left;
+    }
+
+    #applicationsTableBody td:before {
+        content: attr(data-label) ": ";
+        font-weight: 600;
+        color: var(--primary-color);
+        display: inline-block;
+        width: 100px;
+    }
+
+    /* Modal Mobile */
+    .modal-content {
+        width: 95%;
+        margin: 1rem;
+        padding: 1rem;
+        max-height: 90vh;
+        border-radius: 8px;
+    }
+
+    .modal-title {
+        font-size: 1.25rem;
+    }
+
+    /* Settings Page Mobile */
+    #settingsPage > div > div {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+
+    /* Public Form Mobile */
+    #publicForm .container {
+        max-width: 100%;
+        padding: 1rem 10px;
+    }
+
+    #publicForm .card-header {
+        text-align: center;
+    }
+
+    #publicForm .card-title {
+        font-size: 1.5rem;
+    }
+
+    /* Form Grid Mobile */
+    #publicForm form > div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+        gap: 0.5rem !important;
+    }
+
+    /* Status Badge Mobile */
+    .status-badge {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.75rem;
+        border-radius: 12px;
+    }
+
+    /* Fixed Button Mobile */
+    div[style*="position: fixed"] {
+        bottom: 15px !important;
+        right: 15px !important;
+    }
+
+    div[style*="position: fixed"] .btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        border-radius: 25px;
+    }
+}
+
+/* Small Devices (landscape phones, 481px to 768px) */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+    /* Header Adjustments */
+    .header-content {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .nav-menu {
+        gap: 1.5rem;
+    }
+
+    /* Container */
+    .container {
+        padding: 0 15px;
+    }
+
+    /* Page Titles */
+    h1 {
+        font-size: 2rem !important;
+    }
+
+    /* Dashboard Grid */
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    /* Charts Container */
+    .dashboard-grid + div {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+    }
+
+    /* Form Grids */
+    #publicForm form > div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Settings Grid */
+    #settingsPage > div > div {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Table Adjustments */
+    .table th,
+    .table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    /* Modal */
+    .modal-content {
+        width: 90%;
+        max-width: 500px;
+    }
+}
+
+/* Medium Devices (tablets, 769px to 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        max-width: 100%;
+        padding: 0 30px;
+    }
+
+    /* Dashboard adjustments */
+    .dashboard-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* Charts still stack on tablets */
+    .dashboard-grid + div {
+        grid-template-columns: 1fr 1fr !important;
+    }
+}
+
+/* Additional Mobile Utilities */
+@media screen and (max-width: 768px) {
+    /* Hide/Show utilities */
+    .mobile-hidden {
+        display: none !important;
+    }
+
+    .mobile-only {
+        display: block !important;
+    }
+
+    /* Text utilities */
+    .mobile-text-center {
+        text-align: center !important;
+    }
+
+    .mobile-text-small {
+        font-size: 0.875rem !important;
+    }
+
+    /* Spacing utilities */
+    .mobile-mb-1 {
+        margin-bottom: 0.5rem !important;
+    }
+
+    .mobile-mb-2 {
+        margin-bottom: 1rem !important;
+    }
+
+    .mobile-p-1 {
+        padding: 0.5rem !important;
+    }
+
+    /* Flex utilities */
+    .mobile-flex-column {
+        flex-direction: column !important;
+    }
+
+    .mobile-gap-1 {
+        gap: 0.5rem !important;
+    }
+
+    /* Width utilities */
+    .mobile-w-full {
+        width: 100% !important;
+    }
+
+    /* Application Details Mobile Layout */
+    #applicationDetails > div {
+        margin-bottom: 1.5rem !important;
+    }
+
+    #applicationDetails h3 {
+        font-size: 1rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+
+    #applicationDetails div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+        gap: 0.5rem !important;
+    }
+
+    #applicationDetails div[style*="display: flex"] {
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+    }
+
+    #applicationDetails .btn {
+        width: 100% !important;
+    }
+
+    /* Chart Containers Mobile */
+    canvas {
+        max-height: 250px !important;
+    }
+
+    /* Form Input Focus Mobile */
+    .form-input:focus,
+    .form-select:focus {
+        transform: none; /* Prevent zoom on iOS */
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+    }
+
+    /* Prevent horizontal scroll */
+    body {
+        overflow-x: hidden;
+    }
+
+    /* Improve touch targets */
+    .btn,
+    .nav-link,
+    .form-input,
+    .form-select {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Sticky header on mobile */
+    .header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    /* Mobile-friendly animations */
+    .card:hover {
+        transform: none; /* Disable hover effects on mobile */
+    }
+
+    .btn:hover {
+        transform: none;
+    }
+}
+
+/* Landscape Phone Adjustments */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .auth-container {
+        padding: 0.5rem;
+    }
+
+    .auth-card {
+        padding: 1rem;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .modal-content {
+        max-height: 95vh;
+        padding: 1rem;
+    }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* Ensure crisp text on retina displays */
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .header,
+    .nav-menu,
+    .btn,
+    .modal,
+    div[style*="position: fixed"] {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+    }
+}

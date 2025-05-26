@@ -1,0 +1,155 @@
+/* 
+  Place this CSS in a separate file (mobile-responsive-cards.css),
+  and include it in your HTML with:
+  <link rel="stylesheet" href="mobile-responsive-cards.css" />
+  (Make sure to add it after your main <style> so it can override as needed)
+*/
+
+/* --- Responsive Card and Font Adjustments for Small Devices --- */
+@media (max-width: 600px) {
+    body {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+  }
+  
+@media (max-width: 600px) {
+    /* Card sizing and centering */
+    .card,
+    .auth-card,
+    .modal-content {
+      width: 96vw !important;
+      max-width: 98vw !important;
+      min-width: unset !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      border-radius: 13px !important;
+      box-shadow: 0 2px 12px rgba(45,190,127,0.13) !important;
+    }
+    .card-header,
+    .card-body,
+    .modal-content,
+    .auth-card {
+      padding-left: 0.9rem !important;
+      padding-right: 0.9rem !important;
+      padding-top: 1rem !important;
+      padding-bottom: 1rem !important;
+    }
+    .card-title,
+    .modal-title,
+    .auth-title {
+      font-size: 1.1rem !important;
+      text-align: center !important;
+    }
+    /* Center dashboard/stat cards content */
+    .stat-card {
+      text-align: center !important;
+      justify-content: center !important;
+      align-items: center !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 0.5rem !important;
+      padding: 1rem !important;
+    }
+    .stat-number {
+      font-size: 1.45rem !important;
+    }
+    .stat-label,
+    .stat-amount {
+      font-size: 1rem !important;
+    }
+    /* Table font and centering */
+    .table,
+    .table td,
+    .table th {
+      font-size: 0.99rem !important;
+      text-align: center !important;
+    }
+    /* Form font and centering */
+    .form-label,
+    .form-input,
+    .form-select {
+      font-size: 1rem !important;
+      text-align: left !important;
+    }
+    /* Center modal buttons and content */
+    .modal-content > .modal-header,
+    .modal-content > .modal-body,
+    .modal-content > div {
+      text-align: center !important;
+      justify-content: center !important;
+    }
+    /* Center filter and dashboard controls */
+    .filter-controls,
+    .dashboard-charts-row {
+      justify-content: center !important;
+      align-items: center !important;
+      text-align: center !important;
+      flex-direction: column !important;
+      gap: 0.7rem !important;
+    }
+    /* Responsive filter/stat grid fixes */
+    .dashboard-grid,
+    .filter-row,
+    .settings-cards-row {
+      grid-template-columns: 1fr !important;
+      gap: 1rem !important;
+    }
+    /* Public form: stack inputs vertically on mobile */
+    #publicForm form > div[style*="grid-template-columns"] {
+      grid-template-columns: 1fr !important;
+      gap: 0.7rem !important;
+    }
+    /* Make all buttons fill width */
+    .btn, .btn-primary, .btn-secondary, .btn-outline {
+      width: 100% !important;
+      font-size: 1rem !important;
+      padding: 0.65rem 0.8rem !important;
+      margin-bottom: 0.5rem !important;
+    }
+    /* File links and inline elements */
+    .file-link {
+      display: block !important;
+      margin-bottom: 0.5rem !important;
+      word-break: break-all !important;
+    }
+  }
+  
+  /* Extra small screens (e.g. very small mobiles) */
+  @media (max-width: 430px) {
+    .auth-title,
+    .modal-title,
+    .card-title {
+      font-size: 1rem !important;
+    }
+    .stat-number {
+      font-size: 1.15rem !important;
+    }
+    .btn, .btn-primary, .btn-secondary, .btn-outline {
+      font-size: 0.98rem !important;
+      padding: 0.5rem 0.6rem !important;
+    }
+  }
+  
+  /* Center the fixed floating button */
+  @media (max-width: 600px) {
+    body > div[style*="position: fixed;"] {
+      right: 0 !important;
+      left: 0 !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      text-align: center !important;
+      width: 100vw !important;
+      bottom: 8px !important;
+    }
+    body > div[style*="position: fixed;"] .btn {
+      max-width: 98vw;
+      border-radius: 40px !important;
+      font-size: 1.08rem !important;
+      padding: 0.8rem 1.1rem !important;
+    }
+  }
