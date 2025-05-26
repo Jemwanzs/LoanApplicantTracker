@@ -614,10 +614,12 @@
             document.getElementById('mainApp').classList.add('hidden');
             document.getElementById('publicForm').classList.add('hidden');
         }
+        /* DO NOT SHOW SIGN UP
         function showSignup() {
             document.getElementById('signupPage').classList.remove('hidden');
             document.getElementById('loginPage').classList.add('hidden');
         }
+        */
         function showMainApp() {
             document.getElementById('mainApp').classList.remove('hidden');
             document.getElementById('loginPage').classList.add('hidden');
@@ -625,6 +627,7 @@
             document.getElementById('publicForm').classList.add('hidden');
             showDashboard();
         }
+        /*
         function login(event) {
             event.preventDefault();
             const email = document.getElementById('loginEmail').value;
@@ -638,6 +641,29 @@
                 loadUserTheme();
             } else { alert('Invalid credentials!'); }
         }
+        */
+
+        // HARD CODED LOGINS
+        function login(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Hardcoded credentials
+            const hardcodedEmail = "vomondi742@gmail.com";
+            const hardcodedPassword = "@victor2025";
+
+            if (email === hardcodedEmail && password === hardcodedPassword) {
+                const user = { email: hardcodedEmail };
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                showMainApp();
+                loadUserTheme();
+            } else {
+                alert('Invalid credentials!');
+            }
+        }
+
+
         function signup(event) {
             event.preventDefault();
             const email = document.getElementById('signupEmail').value;
